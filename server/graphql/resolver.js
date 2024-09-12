@@ -1,5 +1,5 @@
 const { getPopularMovies, getMovieById } = require('../services/simklService');
-const User = require('../models/User'); // Import User model for watchlist management
+const User = require('../models/user'); // Import User model for watchlist management
 
 const resolvers = {
   Query: {
