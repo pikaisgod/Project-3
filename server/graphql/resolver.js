@@ -1,3 +1,5 @@
+
+
 const { getPopularMovies, getMovieById } = require('../services/simklService');
 const User = require('../models/user'); // Import User model for watchlist management
 
@@ -101,3 +103,4 @@ const resolvers = {
 };
 
 module.exports=resolvers;
+
