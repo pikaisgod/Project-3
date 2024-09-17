@@ -2,9 +2,9 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 // Collection schema for managing user movie collections
-const collection = new Schema({
+const collectionSchema = new Schema({
   userId: {
-    type: mongoose.Schema.Types.ObjectId, // Link to User who created the collection
+    type: mongoose.Schema.Types.ObjectId, 
     ref: 'User',
     required: true
   },
@@ -23,4 +23,4 @@ const collection = new Schema({
   timestamps: true,
 });
 
-module.exports = mongoose.model('Collection', collection); 
+module.exports = mongoose.model('Collection', collectionSchema); 

@@ -3,10 +3,11 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const { graphqlHTTP } = require('express-graphql'); // For GraphQL
-const schema = require('./graphql/schema'); // GraphQL schema
-const resolvers = require('./graphql/resolvers'); // GraphQL resolvers
-const movieRoutes = require('./routes/movie'); // API routes for Simkl
-const authRoutes = require('./routes/auth'); // Authentication routes (if any)
+const { ApolloServer } = require('apollo-server-express');
+const schema = require('./schemas/schema'); // GraphQL schema
+const resolvers = require('./schemas/resolvers'); // GraphQL resolvers
+const movieRoutes = require('./routes/movieRoutes'); // API routes for Simkl
+
 
 const app = express(); // Initialize Express
 
@@ -22,8 +23,13 @@ mongoose.connect(process.env.MONGO_URI, {
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error('MongoDB connection error:', err));
 
+// Apollo Server setup
+const server = new ApolloServer({ typeDefs, resolvers });
+server.start().then(() => {
+  server.applyMiddleware({ app, path: '/graphql' });
+
 // API Routes
-app.use('/api/movies', movieRoutes); // Movie routes for Simkl API integration
+app.use('/api/moviesRoutes', movieRoutes); // Movie routes for Simkl API integration
 app.use('/api/auth', authRoutes);    // Authentication routes (if implemented)
 
 // GraphQL Endpoint
@@ -39,4 +45,5 @@ const PORT = process.env.PORT || 4000;
 // Start Server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+});
 });

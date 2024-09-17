@@ -1,5 +1,6 @@
-const { getPopularMovies, getMovieById } = require('../services/simklService');
-const User = require('../models/user'); // Import User model for watchlist management
+const { getPopularMovies, getMovieById } = require('../services/simklapi');
+const User = require('../models/User'); // Import User model for watchlist management
+const Collection = require('../models/Collection');
 
 const resolvers = {
   Query: {
@@ -16,12 +17,17 @@ const resolvers = {
       return await User.findOne({ username })
       .populate('toWatchList')
       .populate('watchedList')
-      .populate('topRatedMovies');;
+      .populate('topRatedMovies')
+      .populate('collections');
     },
     // Search for movies
     searchMovies: async (_, { query }) => {
       return await searchMovies(query);
    },
+    // Fetch all collections of a user
+    getCollections: async (_, { userId }) => {
+    return await Collection.find({ userId });
+  },
   Mutation: {
     // Resolver for adding a user
     addUser: async (_, { username, password }) => {
@@ -66,9 +72,14 @@ const resolvers = {
       throw new Error('Watchlist is empty or user not found');
     },
      // Create a new movie collection for a user
-    createCollection: async (_, { userId, name, movies }) => {
+     createCollection: async (_, { userId, name, movies }) => {
       const collection = new Collection({ userId, name, movies });
-      return await collection.save();
+      await collection.save();
+
+      // Add the collection to the user's collections array
+      await User.findByIdAndUpdate(userId, { $push: { collections: collection._id } });
+
+      return collection;
     },
     // Add a movie to an existing collection
     addMovieToCollection: async (_, { collectionId, movieId }) => {
@@ -77,6 +88,12 @@ const resolvers = {
         collection.movies.push(movieId);
       }
       return await collection.save();
+    },
+    deleteCollection: async (_, { collectionId }) => {
+      const collection = await Collection.findById(collectionId);
+      await User.findByIdAndUpdate(collection.userId, { $pull: { collections: collectionId } });
+      await Collection.findByIdAndDelete(collectionId);
+      return 'Collection deleted successfully';
     },
     // Add review
     addReview: async (_, { userId, movieId, rating, review }) => {
