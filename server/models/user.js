@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 // User schema to store user data and their watchlist of movie IDs
-const user = new Schema({
+const userSchema = new Schema({
   username: {
     type: String,
     required: true,
@@ -12,9 +12,6 @@ const user = new Schema({
     type: String,
     required: true, 
   },
-  watchlist: [{
-    type: String, 
-  }],
   toWatchList: [{
     type: String, 
   }],
@@ -24,8 +21,11 @@ const user = new Schema({
   topRatedMovies: [{
     type: String, 
   }],
+  collections: [{
+    type: mongoose.Schema.Types.ObjectId, ref: 'Collection'
+  }],
 }, {
   timestamps: true, 
 });
 
-module.exports = mongoose.model('User', user); 
+module.exports = mongoose.model('User', userSchema); 
