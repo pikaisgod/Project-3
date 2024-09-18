@@ -3,7 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const { graphqlHTTP } = require('express-graphql'); // For GraphQL
-const schema = require('./graphql/schema'); // GraphQL schema
+//const schema = require('./graphql/schema'); // GraphQL schema
 const resolvers = require('./graphql/resolvers'); // GraphQL resolvers
 const movieRoutes = require('./routes/movie'); // API routes for Simkl
 const authRoutes = require('./routes/auth'); // Authentication routes (if any)
@@ -15,7 +15,7 @@ app.use(cors());
 app.use(express.json()); // To parse JSON bodies
 
 // MongoDB connection
-mongoose.connect(process.env.MONGO_URI, {
+mongoose.connect(process.env.DB_URI || 'mongodb://localhost:27017/mern-movies', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
