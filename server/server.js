@@ -3,10 +3,13 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const { graphqlHTTP } = require('express-graphql'); // For GraphQL
+
+
 const { ApolloServer } = require('apollo-server-express');
 const schema = require('./schemas/schema'); // GraphQL schema
 const resolvers = require('./schemas/resolvers'); // GraphQL resolvers
 const movieRoutes = require('./routes/movieRoutes'); // API routes for Simkl
+
 
 
 const app = express(); // Initialize Express
@@ -16,7 +19,7 @@ app.use(cors());
 app.use(express.json()); // To parse JSON bodies
 
 // MongoDB connection
-mongoose.connect(process.env.MONGO_URI, {
+mongoose.connect(process.env.DB_URI || 'mongodb://localhost:27017/mern-movies', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
