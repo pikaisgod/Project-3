@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 // Review schema to store reviews and ratings for movies
-const review = new Schema({
+const reviewSchema = new Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -26,6 +26,4 @@ const review = new Schema({
   timestamps: true, 
 });
 
-
-module.exports = mongoose.model('Review', review); 
- main
+module.exports = mongoose.model('Review', reviewSchema); 
